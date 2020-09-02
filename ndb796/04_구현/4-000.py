@@ -60,4 +60,6 @@ if positions[1] < 7:
 print(count)
 
 end_time = time.time()
-print("time :", end_time-start_time) #time : 1.9006304740905762
+print("time :", end_time-start_time)
+
+# 출력 결과가 제대로 안나옴! 틀린 코드,,, 다시 풀기,,,
