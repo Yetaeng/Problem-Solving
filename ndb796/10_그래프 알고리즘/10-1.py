@@ -9,6 +9,12 @@ def find_parent(parent, x):
         return find_parent(parent, parent[x])
     return x
 
+# find_parent함수 개선된 방법 : 경로 압축 기법
+# def find_parent(parent, x):
+#     if parent[x] != x:
+#         parent[x] = find_parent(parent, parent[x])
+#     return parent[x]
+
 # 두 원소가 속한 집합을 합치기
 
 
