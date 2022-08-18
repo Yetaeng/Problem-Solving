@@ -21,3 +21,10 @@ function solution(array, commands) {
  * slice() 메서드는 어떤 배열의 begin부터 end까지(end 미포함)에 대한 얕은 복사본을 새로운 배열 객체로 반환한다. 원본 배열은 바뀌지 않는다.
  * sort()는 정렬한 배열. 원 배열이 정렬된다. 복사본이 만들어지는 것이 아니다.
  */
+
+ function solution2(numbers) {
+  // 문자열을 그대로 연결한 수에서 바꿔 연결한 수를 뺏을 때, 양수면 순서 유지, 음수면 교환함으로써 큰 순서대로 정렬함
+  const answer = numbers.map(num => String(num)).sort((a, b) => b+a - (a+b)).join('');
+
+  return answer[0] === '0' ? '0' : answer;
+}
