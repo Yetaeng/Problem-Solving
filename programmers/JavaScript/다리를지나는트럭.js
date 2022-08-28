@@ -1,45 +1,55 @@
+class Truck {
+    constructor(weight) {
+        this.weight = weight;
+        this.position = 0;
+    }
+}
+
 function solution(bridge_length, weight, truck_weights) {
+    let truck;
+    let queue_trucks = [];
+    
+    for (let v of truck_weights) {
+        truck = new Truck(v);
+        queue_trucks.push(truck);
+    }
+    
     let time = 0;
-    let out_truck;
-    let waiting_truck;
+    let weight_on_bridge = 0;
+    let leaved_truck;
     const on_bridge = [];
     const arrived = [];
-    const truck_weights_sum = getSumOfTruckWeights(truck_weights);
+    let n = truck_weights.length;
+
+    if (getSumOfTruckWeights(truck_weights) <= weight) return truck_weights.length + bridge_length;
     
-    if (truck_weights_sum <= weight) return truck_weights.length + bridge_length;
+    while(queue_trucks.length !== 0) {
+        leaved_truck = queue_trucks ? queue_trucks[0] : 0;
+        // console.log('*', weight_on_bridge, leaved_truck.weight);
 
-    while(arrived.length !== truck_weights.length) {
-        out_truck = truck_weights.shift();
-        waiting_truck = truck_weights[0];
+        if ((weight_on_bridge + leaved_truck.weight) < weight) {
+            on_bridge.push(leaved_truck);
+            weight_on_bridge += leaved_truck.weight;
+            queue_trucks.shift();
+            // console.log("동시", on_bridge)
 
-        for (let i=bridge_length; i>=0; i--) {
-            if ((getSumOfTruckWeights(on_bridge) + waiting_truck < weight) && (on_bridge.length < bridge_length)) {
-                // 다리에 트럭 추가
-                if (on_bridge.length === 0) {
-                    on_bridge.push(out_truck)
-                } else {
-                    on_bridge.push(waiting_truck);
-                }
-                time++;
-                console.log('*', on_bridge, truck_weights, time);
-            } else if ((getSumOfTruckWeights(on_bridge) + waiting_truck < weight) && (on_bridge.length === bridge_length)) {
-                // 트럭이 다리를 지남
-                arrived.push(on_bridge.shift());
-                time++;
-                console.log('**', on_bridge, truck_weights, time);
-            } else if ((getSumOfTruckWeights(on_bridge) + waiting_truck >= weight) && (on_bridge.length < bridge_length)) {
-                // 다리위 트럭만 이동
-                time++;
-                console.log('***', on_bridge, truck_weights, time);
+        }
+        console.log('@', on_bridge)
+        for (let v of on_bridge) {
+            v.position++;
+            console.log('@@', v) // on_bridge 요소가 두개이상일때 왜 다 안돌지?
+            if (v.position === bridge_length) {
+                arrived.push(v);
+                on_bridge.shift();
+                weight_on_bridge -= v.weight;
+                // time++;
             }
+            // console.log('@@@', arrived, on_bridge)
         }
-        arrived.push(on_bridge.shift());
-
-        if (on_bridge.length === 1 && truck_weights.length === 0) {
-            console.log('#', on_bridge, truck_weights, time);
-            return time + bridge_length;
-        }
+        time++;
+        // console.log('time: ', time)
     }
+
     return time;
 }
 
