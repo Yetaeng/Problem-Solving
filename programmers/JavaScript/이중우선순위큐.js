@@ -26,3 +26,23 @@ function solution(operations) {
 
     return [max, min];
 }
+
+function solution2(operations) {
+    const PriorityQueue = [];
+    
+    for (let v of operations) {
+        if (v.includes("I") === true) {
+            PriorityQueue.push(v.split(" ")[1])
+            PriorityQueue.sort((a,b) => {return a-b})
+        } else if (v.includes("D 1") === true) {
+            PriorityQueue.pop();
+        } else {
+            PriorityQueue.shift();
+        }
+    }
+    
+    let min = parseInt(PriorityQueue[0])
+    let max = parseInt(PriorityQueue[PriorityQueue.length -1])
+    
+    return PriorityQueue.length === 0 ? [0, 0] : [max, min]
+}
