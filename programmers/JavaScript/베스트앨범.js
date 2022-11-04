@@ -70,3 +70,28 @@ function solution(genres, plays) {
 
   return answer;
 }
+
+// 다른 사람의 풀이 : 메소드 활용 대단하다
+function solution2(genres, plays) {
+  let obj_totalCnt = {};
+  genres.forEach((v, i) => {
+    obj_totalCnt[v] = obj_totalCnt[v] ? obj_totalCnt[v] + plays[i] : plays[i];
+  }); //	{ classic: 1450, pop: 3100 }
+
+  let dup_obj = {};
+  const answer = genres
+                  .map((v,i) => ({genre: v, play: plays[i], index: i}))
+                  .sort((a,b) => {
+                    if (a.genre !== b.genre) return obj_totalCnt[b.genre] - obj_totalCnt[a.genre]; // 장르가 다르면 총 재생수 기준으로 내림차순 정렬
+                    if (a.play !== b.play) return b.play - a.play; // 각 노래마다 재생수 기준으로 내림차수 정렬
+                    return a.index - b.index; // 그 외에는 고유번호가 빠른순으로 정렬
+                  })
+                  .filter(s => {
+                    if (dup_obj[s.genre] >= 2) return false; // 필터된 요소들 순서대로 dup_obj에 넣을 때 2개 이상이 되면 필터링 멈추기 위함 
+                    dup_obj[s.genre] = dup_obj[s.genre] ? dup_obj[s.genre] + 1 : 1;
+                    return true;
+                  })
+                  .map(v => v.index)
+
+  return answer;
+}
