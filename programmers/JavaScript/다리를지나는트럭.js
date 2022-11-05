@@ -1,58 +1,33 @@
-class Truck {
-    constructor(weight) {
-        this.weight = weight;
-        this.position = 0;
-    }
-}
-
 function solution(bridge_length, weight, truck_weights) {
-    let truck;
-    let queue_trucks = [];
+    let time = 1;
+    const trucks = truck_weights.length;
+    let passed = [];
+    let queue = [];
     
-    for (let v of truck_weights) {
-        truck = new Truck(v);
-        queue_trucks.push(truck);
-    }
+    let obj = {};
+    obj[time] = truck_weights[0];
+    queue.push(truck_weights.shift());
     
-    let time = 0;
-    let weight_on_bridge = 0;
-    let leaved_truck;
-    const on_bridge = [];
-    const arrived = [];
-    let n = truck_weights.length;
-
-    if (getSumOfTruckWeights(truck_weights) <= weight) return truck_weights.length + bridge_length;
-    
-    while(queue_trucks.length !== 0) {
-        leaved_truck = queue_trucks ? queue_trucks[0] : 0;
-        // console.log('*', weight_on_bridge, leaved_truck.weight);
-
-        if ((weight_on_bridge + leaved_truck.weight) < weight) {
-            on_bridge.push(leaved_truck);
-            weight_on_bridge += leaved_truck.weight;
-            queue_trucks.shift();
-            // console.log("동시", on_bridge)
-
-        }
-        console.log('@', on_bridge)
-        for (let v of on_bridge) {
-            v.position++;
-            console.log('@@', v) // on_bridge 요소가 두개이상일때 왜 다 안돌지?
-            if (v.position === bridge_length) {
-                arrived.push(v);
-                on_bridge.shift();
-                weight_on_bridge -= v.weight;
-                // time++;
+    // weight 10단위로 끊어서 키 값주기 (10,000 이하)
+    let sum;
+    while (passed.length !== trucks) {
+            Object.keys(obj).find(v => {
+                if (time == bridge_length + parseInt(v)) {
+                    passed.push(queue.shift());
+                }
+            });
+            
+            sum = queue.reduce((sum, curr) => sum+curr, 0);
+            if (sum + truck_weights[0] <= weight) {
+                obj[time] ? obj[time+1] = truck_weights[0] : obj[time] = truck_weights[0]; 
+                queue.push(truck_weights.shift());
             }
-            // console.log('@@@', arrived, on_bridge)
-        }
-        time++;
-        // console.log('time: ', time)
+            time++
     }
 
-    return time;
+    return time-1;
 }
 
-function getSumOfTruckWeights(trucks) {
-    return trucks.reduce((sum,curr) => {return sum+curr}, 0);
-}
+// console.log(solution(2, 10, [7,4,5,6]));
+// console.log(solution(100, 100, [10]));
+// console.log(solution(100, 100, [10,10,10,10,10,10,10,10,10,10]));
