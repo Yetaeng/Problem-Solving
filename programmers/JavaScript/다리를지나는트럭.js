@@ -8,7 +8,6 @@ function solution(bridge_length, weight, truck_weights) {
     obj[time] = truck_weights[0];
     queue.push(truck_weights.shift());
     
-    // weight 10단위로 끊어서 키 값주기 (10,000 이하)
     let sum;
     while (passed.length !== trucks) {
             Object.keys(obj).find(v => {
@@ -22,6 +21,8 @@ function solution(bridge_length, weight, truck_weights) {
                 obj[time] ? obj[time+1] = truck_weights[0] : obj[time] = truck_weights[0]; 
                 queue.push(truck_weights.shift());
             }
+
+            // 시간 점프로 개선 필요
             time++
     }
 
